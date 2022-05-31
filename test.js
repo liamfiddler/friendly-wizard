@@ -1,5 +1,5 @@
 import test from 'ava';
-import { Wizard } from './src/index.js';
+import { Wizard } from './index.js';
 
 test('Can construct a wizard', (t) => {
   new Wizard({ steps: [] });
@@ -176,6 +176,39 @@ test('Can skip questions based on equality (setting response)', (t) => {
   t.is(wizard.nextStep.id, 'skip');
   wizard.responses.set('something', 'test');
   t.is(wizard.nextStep.id, 'last');
+});
+
+test('Can skip questions based on query', (t) => {
+  const wizard = new Wizard({
+    steps: [
+      {
+        id: 'first',
+      },
+      {
+        id: 'skip',
+        skip: {
+          something: {
+            $in: ['test1', 'test2'],
+          },
+          somethingelse: {
+            $gt: 4,
+          },
+        },
+      },
+      {
+        id: 'last',
+      },
+    ],
+    responses: {
+      something: 'test2',
+      somethingelse: 6,
+    },
+  });
+
+  t.is(wizard.activeStep.id, 'first');
+  t.is(wizard.nextStep.id, 'last');
+  wizard.next();
+  t.is(wizard.activeStep.id, 'last');
 });
 
 test('Can skip questions based on a boolean', (t) => {

@@ -2,7 +2,7 @@
   "name": "friendly-wizard",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FutureFriendlyTeam/friendly-wizard.git"
@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "ava": "^4.2.0"
+  },
+  "dependencies": {
+    "sift": "^16.0.0"
   }
 }

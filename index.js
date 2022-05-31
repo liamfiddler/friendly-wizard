@@ -1,3 +1,5 @@
+import sift from 'sift';
+
 /**
  * @typedef {Object} Step
  * @property {string|number} [id] - Defaults to the array index if not specified
@@ -67,7 +69,8 @@ export class Wizard {
       if (options.responses instanceof Map) {
         this.#responses = options.responses;
       } else {
-        this.#responses = new Map(Object.entries(options.responses));
+        const responses = Object.entries(options.responses);
+        this.#responses = new Map(responses);
       }
     }
   }
@@ -90,14 +93,9 @@ export class Wizard {
         return step.skip(this);
       }
 
-      // Handle object values
-      for (const key in step.skip) {
-        const stepSkipData = step.skip[key];
-
-        if (stepSkipData?.$eq) {
-          return stepSkipData.$eq == this.#responses.get(key);
-        }
-      }
+      // Handle mongodb-style objects
+      const responses = Object.fromEntries(this.#responses);
+      return sift(step.skip)(responses);
     }
 
     return false;
