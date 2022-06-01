@@ -193,7 +193,7 @@ export class Wizard {
 
   /**
    * Iterable steps
-   * @returns {Step}
+   * @returns {Iterable<Step>}
    */
   *steps() {
     for (const step of this.#steps) {
