@@ -1,25 +1,42 @@
+/**
+ * A module for handling wizard data
+ * @module friendly-wizard
+ */
+
 import sift from 'sift';
 
 /**
  * @typedef {Object} Step
- * @property {string|number} [id] - Defaults to the array index if not specified
- * @property {string} [type] - The type of step
- * @property {boolean|SkipFn|Record<string, SkipObj>} [skip]
- * @property {any} [data] - Any other data you may want to attach to the step
+ * @property {string|number} [id] Defaults to the array index if not specified
+ * @property {string} [type] The type of step
+ * @property {boolean|function(Wizard): boolean|Object} [skip] The logic for skipping a step (a boolean, a function that returns a boolean, or a mongo-style object)
+ * @property {any} [data] Any other data you may want to attach to the step
  */
 
 /**
- * @typedef {(wizard: Wizard) => boolean} SkipFn
+ * A Wizard data class
+ * @alias module:friendly-wizard
  */
-
-/**
- * @typedef {Object} SkipObj
- * @property {string|number} [SkipObj.$eq] - Does the field match the specified value
- */
-
 export class Wizard {
+  /**
+   * The array of steps in the wizard
+   * @type Step[]
+   * @private
+  */
   #steps = [];
+
+  /**
+   * The active step's index
+   * @type number
+   * @private
+  */
   #stepIndex = 0;
+
+  /**
+   * The responses to the wizard
+   * @type Map<string, any>
+   * @private
+  */
   #responses = new Map();
 
   /**
@@ -78,6 +95,7 @@ export class Wizard {
   /**
    * Should a step be skipped?
    * @returns {boolean}
+   * @private
    */
   #skipStep(index) {
     const step = this.#steps[index];
@@ -104,6 +122,7 @@ export class Wizard {
   /**
    * Gets the index of the next step
    * @returns {number|undefined}
+   * @private
    */
   #nextStepIndex(startStepIndex) {
     let start = (startStepIndex ?? this.#stepIndex) + 1;
@@ -120,6 +139,7 @@ export class Wizard {
   /**
    * Gets the index of the previous step
    * @returns {number|undefined}
+   * @private
    */
   #previousStepIndex(startStepIndex) {
     let start = (startStepIndex ?? this.#stepIndex) - 1;

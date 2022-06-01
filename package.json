@@ -16,10 +16,12 @@
   "homepage": "https://github.com/FutureFriendlyTeam/friendly-wizard#readme",
   "scripts": {
     "test": "ava",
-    "test:watch": "ava -w"
+    "test:watch": "ava -w",
+    "docs": "jsdoc2md --template README.hbs index.js >| ./README.md"
   },
   "devDependencies": {
-    "ava": "^4.2.0"
+    "ava": "^4.2.0",
+    "jsdoc-to-markdown": "^7.1.1"
   },
   "dependencies": {
     "sift": "^16.0.0"
