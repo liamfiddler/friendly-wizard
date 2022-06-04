@@ -24,22 +24,24 @@ export const App = () => {
   };
 
   return (
-    <form key={wizard.activeStep.id} onSubmit={handleSubmit}>
+    <>
       <progress value={wizard.progressPercent} max="100" />
-      <br />
-      <h1>{wizard.activeStep.data.title}</h1>
-      <p>{wizard.activeStep.data.body}</p>
-      {inputs}
-      <button
-        type="button"
-        onClick={() => wizard.previous()}
-        disabled={wizard.isFirstStep}
-      >
-        Back
-      </button>
-      <button type="submit" disabled={wizard.isLastStep}>
-        Continue
-      </button>
-    </form>
+      <form key={wizard.activeStep.id} onSubmit={handleSubmit}>
+        <br />
+        <h1>{wizard.activeStep.data.title}</h1>
+        <p>{wizard.activeStep.data.body}</p>
+        {inputs}
+        <button
+          type="button"
+          onClick={() => wizard.previous()}
+          disabled={wizard.isFirstStep}
+        >
+          Back
+        </button>
+        <button type="submit" disabled={wizard.isLastStep}>
+          Continue
+        </button>
+      </form>
+    </>
   );
 };
