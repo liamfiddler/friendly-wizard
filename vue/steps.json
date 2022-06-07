@@ -1,0 +1,47 @@
+[
+  {
+    "id": "start",
+    "type": "text",
+    "data": {
+      "title": "Start",
+      "body": "Lorem ipsum dolor sit amet"
+    }
+  },
+  {
+    "id": "step1",
+    "type": "YesNo",
+    "data": {
+      "title": "Step 1",
+      "body": "Do you want to see Step 2?"
+    }
+  },
+  {
+    "id": "step2",
+    "type": "text",
+    "data": {
+      "title": "Step 2",
+      "body": "Hi there!"
+    },
+    "skip": {
+      "step1": {
+        "$eq": "No"
+      }
+    }
+  },
+  {
+    "id": "step3",
+    "type": "text",
+    "data": {
+      "title": "Step 3",
+      "body": "Try clicking back and see how it skips or doesn't skip step 2 depending on your answers."
+    }
+  },
+  {
+    "id": "finish",
+    "type": "text",
+    "data": {
+      "title": "Finish",
+      "body": "Lorem ipsum dolor sit amet"
+    }
+  }
+]

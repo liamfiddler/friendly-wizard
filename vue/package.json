@@ -1,0 +1,16 @@
+{
+  "name": "friendly-wizard-vue",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "@liamfiddler",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/transformer-vue": "^2.6.0",
+    "parcel": "^2.6.0",
+    "vue": "^3.2.37"
+  }
+}

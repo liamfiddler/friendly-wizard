@@ -27,7 +27,6 @@ export const App = () => {
     <>
       <progress value={wizard.progressPercent} max="100" />
       <form key={wizard.activeStep.id} onSubmit={handleSubmit}>
-        <br />
         <h1>{wizard.activeStep.data.title}</h1>
         <p>{wizard.activeStep.data.body}</p>
         {inputs}
