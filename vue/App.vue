@@ -1,7 +1,7 @@
 <template>
   <div>
     <progress :value="wizard.progressPercent" max="100" />
-    <form :key="stepId" @submit="handleSubmit">
+    <form :key="stepId" @submit.prevent="handleSubmit">
       <h1>{{ wizard.activeStep.data.title }}</h1>
       <p>{{ wizard.activeStep.data.body }}</p>
       <template v-if="wizard.activeStep?.type === 'YesNo'">
@@ -26,6 +26,9 @@
 export default {
   data() {
     return {
+      // Vue doesn't watch the wizard's internal values, so we
+      // update the form key whenever it changes to a different
+      // step, forcing Vue to rerender.
       stepId: this.wizard.activeStep.id,
     };
   },
@@ -34,9 +37,8 @@ export default {
       this.wizard.previous();
       this.stepId = this.wizard.activeStep.id;
     },
-    handleSubmit(e) {
-      e.preventDefault();
-      this.wizard.responsesFromForm(e.target);
+    handleSubmit({ target }) {
+      this.wizard.responsesFromForm(target);
       this.wizard.next();
       this.stepId = this.wizard.activeStep.id;
     },
