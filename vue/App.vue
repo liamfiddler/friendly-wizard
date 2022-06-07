@@ -36,13 +36,7 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const inputData = Object.fromEntries(formData.entries());
-
-      for (const key in inputData) {
-        this.wizard.responses.set(key, inputData[key]);
-      }
-
+      this.wizard.responsesFromForm(e.target);
       this.wizard.next();
       this.stepId = this.wizard.activeStep.id;
     },

@@ -22,21 +22,21 @@ export class Wizard {
    * The array of steps in the wizard
    * @type Step[]
    * @private
-  */
+   */
   #steps = [];
 
   /**
    * The active step's index
    * @type number
    * @private
-  */
+   */
   #stepIndex = 0;
 
   /**
    * The responses to the wizard
    * @type Map<string, any>
    * @private
-  */
+   */
   #responses = new Map();
 
   /**
@@ -245,7 +245,7 @@ export class Wizard {
    */
   get progressPercent() {
     if (this.isLastStep) {
-        return 100;
+      return 100;
     }
 
     return ((this.#stepIndex + 1) / this.#steps.length) * 100;
@@ -257,5 +257,18 @@ export class Wizard {
    */
   get responses() {
     return this.#responses;
+  }
+
+  /**
+   * Add the values from a HTML form element to the responses
+   * @param {HTMLFormElement} form
+   */
+  responsesFromForm(form) {
+    const formData = new FormData(form);
+    const inputData = Object.fromEntries(formData.entries());
+
+    for (const key in inputData) {
+      this.#responses.set(key, inputData[key]);
+    }
   }
 }

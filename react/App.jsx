@@ -13,13 +13,7 @@ export const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const inputData = Object.fromEntries(formData.entries());
-
-    for (const key in inputData) {
-      wizard.responses.set(key, inputData[key]);
-    }
-
+    wizard.responsesFromForm(e.target);
     wizard.next();
   };
 
