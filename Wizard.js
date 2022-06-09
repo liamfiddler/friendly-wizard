@@ -34,10 +34,10 @@ export default class Wizard extends EventTarget {
 
   /**
    * The responses to the wizard
-   * @type Map<string, any>
+   * @type WizardResponses<string, any>
    * @private
    */
-  _responses = new Map();
+  _responses;
 
   /**
    * Construct a new Wizard
@@ -86,11 +86,13 @@ export default class Wizard extends EventTarget {
 
     if (options?.responses) {
       if (options.responses instanceof Map) {
-        this._responses = options.responses;
+        this._responses = new WizardResponses(this, options.responses);
       } else {
         const responses = Object.entries(options.responses);
-        this._responses = new Map(responses);
+        this._responses = new WizardResponses(this, responses);
       }
+    } else {
+      this._responses = new WizardResponses(this);
     }
   }
 
@@ -285,6 +287,41 @@ export default class Wizard extends EventTarget {
 
     for (const key in inputData) {
       this._responses.set(key, inputData[key]);
+    }
+  }
+}
+
+// An extended Map class that emits events on changes
+class WizardResponses extends Map {
+  #wizard;
+
+  constructor(wizard, ...args) {
+    super(...args);
+    this.#wizard = wizard;
+  }
+
+  dispatchChangeEvent() {
+    this.#wizard.dispatchEvent(new Event('responses:change'));
+  }
+
+  set(key, value) {
+    if (!super.has(key) || super.get(key) !== value) {
+      super.set(key, value);
+      this.dispatchChangeEvent();
+    }
+  }
+
+  delete(key) {
+    if (super.has(key)) {
+      super.delete(key);
+      this.dispatchChangeEvent();
+    }
+  }
+
+  clear() {
+    if (super.size > 0) {
+      super.clear();
+      this.dispatchChangeEvent();
     }
   }
 }
