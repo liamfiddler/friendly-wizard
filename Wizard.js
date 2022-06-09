@@ -44,7 +44,7 @@ export default class Wizard extends EventTarget {
    * @param {Object} options
    * @param {Step[]} options.steps
    * @param {number|string} [options.startAtId]
-   * @param {Map|Record<string, any>} [options.responses]
+   * @param {Map<string, any>|Record<string, any>} [options.responses]
    */
   constructor(options) {
     super();
