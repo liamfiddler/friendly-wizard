@@ -26,21 +26,25 @@
 export default {
   data() {
     return {
-      // Vue doesn't watch the wizard's internal values, so we
-      // update the form key whenever it changes to a different
-      // step, forcing Vue to rerender.
       stepId: this.wizard.activeStep.id,
     };
   },
+  mounted() {
+    this.wizard.addEventListener('step:change', this.updateActiveStep);
+  },
+  beforeDestroy() {
+    this.wizard.removeEventListener('step:change', this.updateActiveStep);
+  },
   methods: {
+    updateActiveStep() {
+      this.stepId = this.wizard.activeStep.id;
+    },
     goBack() {
       this.wizard.previous();
-      this.stepId = this.wizard.activeStep.id;
     },
     handleSubmit({ target }) {
       this.wizard.responsesFromForm(target);
       this.wizard.next();
-      this.stepId = this.wizard.activeStep.id;
     },
   },
 };

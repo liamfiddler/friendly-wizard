@@ -13,7 +13,7 @@ npm install FutureFriendlyTeam/friendly-wizard
 Then import the Wizard class and start using it:
 
 ```js
-import { Wizard } from 'FutureFriendlyTeam/friendly-wizard/index.js';
+import { Wizard } from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
 
 const wizard = new Wizard({
     steps: [
@@ -38,33 +38,34 @@ A module for handling wizard data
 
 
 * [friendly-wizard](#module_friendly-wizard)
-    * [.exports.Wizard](#exp_module_friendly-wizard--exports.Wizard) ⏏
-        * [new exports.Wizard(options)](#new_module_friendly-wizard--exports.Wizard_new)
+    * [module.exports](#exp_module_friendly-wizard--module.exports) ⏏
+        * [new module.exports(options)](#new_module_friendly-wizard--module.exports_new)
         * _instance_
-            * [.isLastStep](#module_friendly-wizard--exports.Wizard.Wizard+isLastStep) ⇒ <code>boolean</code>
-            * [.isFirstStep](#module_friendly-wizard--exports.Wizard.Wizard+isFirstStep) ⇒ <code>boolean</code>
-            * [.activeStep](#module_friendly-wizard--exports.Wizard.Wizard+activeStep) ⇒ <code>Step</code>
-            * [.previousStep](#module_friendly-wizard--exports.Wizard.Wizard+previousStep) ⇒ <code>Step</code>
-            * [.nextStep](#module_friendly-wizard--exports.Wizard.Wizard+nextStep) ⇒ <code>Step</code>
-            * [.stepNum](#module_friendly-wizard--exports.Wizard.Wizard+stepNum) ⇒ <code>number</code>
-            * [.stepTotal](#module_friendly-wizard--exports.Wizard.Wizard+stepTotal) ⇒ <code>number</code>
-            * [.progressPercent](#module_friendly-wizard--exports.Wizard.Wizard+progressPercent) ⇒ <code>number</code>
-            * [.responses](#module_friendly-wizard--exports.Wizard.Wizard+responses) ⇒ <code>Map.&lt;string, any&gt;</code>
-            * [.next()](#module_friendly-wizard--exports.Wizard.Wizard+next)
-            * [.previous()](#module_friendly-wizard--exports.Wizard.Wizard+previous)
-            * [.steps()](#module_friendly-wizard--exports.Wizard.Wizard+steps) ⇒ <code>Iterable.&lt;Step&gt;</code>
+            * [.isLastStep](#module_friendly-wizard--module.exports+isLastStep) ⇒ <code>boolean</code>
+            * [.isFirstStep](#module_friendly-wizard--module.exports+isFirstStep) ⇒ <code>boolean</code>
+            * [.activeStep](#module_friendly-wizard--module.exports+activeStep) ⇒ <code>Step</code>
+            * [.previousStep](#module_friendly-wizard--module.exports+previousStep) ⇒ <code>Step</code>
+            * [.nextStep](#module_friendly-wizard--module.exports+nextStep) ⇒ <code>Step</code>
+            * [.stepNum](#module_friendly-wizard--module.exports+stepNum) ⇒ <code>number</code>
+            * [.stepTotal](#module_friendly-wizard--module.exports+stepTotal) ⇒ <code>number</code>
+            * [.progressPercent](#module_friendly-wizard--module.exports+progressPercent) ⇒ <code>number</code>
+            * [.responses](#module_friendly-wizard--module.exports+responses) ⇒ <code>Map.&lt;string, any&gt;</code>
+            * [.next()](#module_friendly-wizard--module.exports+next)
+            * [.previous()](#module_friendly-wizard--module.exports+previous)
+            * [.steps()](#module_friendly-wizard--module.exports+steps) ⇒ <code>Iterable.&lt;Step&gt;</code>
+            * [.responsesFromForm(form)](#module_friendly-wizard--module.exports+responsesFromForm)
         * _inner_
-            * [~Step](#module_friendly-wizard--exports.Wizard..Step) : <code>Object</code>
+            * [~Step](#module_friendly-wizard--module.exports..Step) : <code>Object</code>
 
-<a name="exp_module_friendly-wizard--exports.Wizard"></a>
+<a name="exp_module_friendly-wizard--module.exports"></a>
 
-### .exports.Wizard ⏏
+### module.exports ⏏
 A Wizard data class
 
-**Kind**: static class of [<code>friendly-wizard</code>](#module_friendly-wizard)  
-<a name="new_module_friendly-wizard--exports.Wizard_new"></a>
+**Kind**: Exported class  
+<a name="new_module_friendly-wizard--module.exports_new"></a>
 
-#### new exports.Wizard(options)
+#### new module.exports(options)
 Construct a new Wizard
 
 
@@ -75,82 +76,93 @@ Construct a new Wizard
 | [options.startAtId] | <code>number</code> \| <code>string</code> | 
 | [options.responses] | <code>Map</code> \| <code>Record.&lt;string, any&gt;</code> | 
 
-<a name="module_friendly-wizard--exports.Wizard.Wizard+isLastStep"></a>
+<a name="module_friendly-wizard--module.exports+isLastStep"></a>
 
-#### exports.Wizard.isLastStep ⇒ <code>boolean</code>
+#### module.exports.isLastStep ⇒ <code>boolean</code>
 Is the active step the last step?
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+isFirstStep"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+isFirstStep"></a>
 
-#### exports.Wizard.isFirstStep ⇒ <code>boolean</code>
+#### module.exports.isFirstStep ⇒ <code>boolean</code>
 Is the active step the first step?
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+activeStep"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+activeStep"></a>
 
-#### exports.Wizard.activeStep ⇒ <code>Step</code>
+#### module.exports.activeStep ⇒ <code>Step</code>
 Get the active step
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+previousStep"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+previousStep"></a>
 
-#### exports.Wizard.previousStep ⇒ <code>Step</code>
+#### module.exports.previousStep ⇒ <code>Step</code>
 Get the previous step
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+nextStep"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+nextStep"></a>
 
-#### exports.Wizard.nextStep ⇒ <code>Step</code>
+#### module.exports.nextStep ⇒ <code>Step</code>
 Get the next step
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+stepNum"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+stepNum"></a>
 
-#### exports.Wizard.stepNum ⇒ <code>number</code>
+#### module.exports.stepNum ⇒ <code>number</code>
 Get the active step number
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+stepTotal"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+stepTotal"></a>
 
-#### exports.Wizard.stepTotal ⇒ <code>number</code>
+#### module.exports.stepTotal ⇒ <code>number</code>
 Get the total number of steps
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+progressPercent"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+progressPercent"></a>
 
-#### exports.Wizard.progressPercent ⇒ <code>number</code>
+#### module.exports.progressPercent ⇒ <code>number</code>
 Get the percentage of progress through the steps
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+responses"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+responses"></a>
 
-#### exports.Wizard.responses ⇒ <code>Map.&lt;string, any&gt;</code>
+#### module.exports.responses ⇒ <code>Map.&lt;string, any&gt;</code>
 Get the responses to the wizard
 
-**Kind**: instance property of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+next"></a>
+**Kind**: instance property of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+next"></a>
 
-#### exports.Wizard.next()
+#### module.exports.next()
 Sets the next step active
 
-**Kind**: instance method of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+previous"></a>
+**Kind**: instance method of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+previous"></a>
 
-#### exports.Wizard.previous()
+#### module.exports.previous()
 Sets the previous step active
 
-**Kind**: instance method of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard.Wizard+steps"></a>
+**Kind**: instance method of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+steps"></a>
 
-#### exports.Wizard.steps() ⇒ <code>Iterable.&lt;Step&gt;</code>
+#### module.exports.steps() ⇒ <code>Iterable.&lt;Step&gt;</code>
 Iterable steps
 
-**Kind**: instance method of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
-<a name="module_friendly-wizard--exports.Wizard..Step"></a>
+**Kind**: instance method of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+<a name="module_friendly-wizard--module.exports+responsesFromForm"></a>
 
-#### exports.Wizard~Step : <code>Object</code>
-**Kind**: inner typedef of [<code>exports.Wizard</code>](#exp_module_friendly-wizard--exports.Wizard)  
+#### module.exports.responsesFromForm(form)
+Add the values from a HTML form element to the responses
+
+**Kind**: instance method of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
+
+| Param | Type |
+| --- | --- |
+| form | <code>HTMLFormElement</code> | 
+
+<a name="module_friendly-wizard--module.exports..Step"></a>
+
+#### module.exports~Step : <code>Object</code>
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
 **Properties**
 
 | Name | Type | Description |

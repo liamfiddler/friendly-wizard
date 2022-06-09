@@ -2,7 +2,7 @@
   "name": "friendly-wizard",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "Wizard.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FutureFriendlyTeam/friendly-wizard.git"
@@ -17,7 +17,7 @@
   "scripts": {
     "test": "ava",
     "test:watch": "ava -w",
-    "docs": "jsdoc2md --template README.hbs index.js >| ./README.md"
+    "docs": "jsdoc2md --template README.hbs Wizard.js >| ./README.md"
   },
   "devDependencies": {
     "ava": "^4.2.0",

@@ -17,7 +17,7 @@ import sift from 'sift';
  * A Wizard data class
  * @alias module:friendly-wizard
  */
-export class Wizard {
+export default class Wizard extends EventTarget {
   /**
    * The array of steps in the wizard
    * @type Step[]
@@ -37,7 +37,7 @@ export class Wizard {
    * @type Map<string, any>
    * @private
    */
-  #responses = new Map();
+  _responses = new Map();
 
   /**
    * Construct a new Wizard
@@ -47,6 +47,8 @@ export class Wizard {
    * @param {Map|Record<string, any>} [options.responses]
    */
   constructor(options) {
+    super();
+
     if (!options?.steps) {
       throw new Error('Wizard is missing the "steps" option');
     }
@@ -84,16 +86,17 @@ export class Wizard {
 
     if (options?.responses) {
       if (options.responses instanceof Map) {
-        this.#responses = options.responses;
+        this._responses = options.responses;
       } else {
         const responses = Object.entries(options.responses);
-        this.#responses = new Map(responses);
+        this._responses = new Map(responses);
       }
     }
   }
 
   /**
    * Should a step be skipped?
+   * @param {number} index
    * @returns {boolean}
    * @private
    */
@@ -112,7 +115,7 @@ export class Wizard {
       }
 
       // Handle mongodb-style objects
-      const responses = Object.fromEntries(this.#responses);
+      const responses = Object.fromEntries(this._responses);
       return sift(step.skip)(responses);
     }
 
@@ -174,17 +177,30 @@ export class Wizard {
   }
 
   /**
+   * Sets the step at index active
+   * @param {number} newStepIndex
+   */
+  #setStepIndex(newStepIndex) {
+    if (this.#stepIndex !== newStepIndex) {
+      this.#stepIndex = newStepIndex;
+      this.dispatchEvent(new Event('step:change'));
+    }
+  }
+
+  /**
    * Sets the next step active
    */
   next() {
-    this.#stepIndex = this.#nextStepIndex();
+    this.#setStepIndex(this.#nextStepIndex());
+    this.dispatchEvent(new Event('step:next'));
   }
 
   /**
    * Sets the previous step active
    */
   previous() {
-    this.#stepIndex = this.#previousStepIndex();
+    this.#setStepIndex(this.#previousStepIndex());
+    this.dispatchEvent(new Event('step:previous'));
   }
 
   /**
@@ -256,7 +272,7 @@ export class Wizard {
    * @returns {Map<string, any>}
    */
   get responses() {
-    return this.#responses;
+    return this._responses;
   }
 
   /**
@@ -268,7 +284,7 @@ export class Wizard {
     const inputData = Object.fromEntries(formData.entries());
 
     for (const key in inputData) {
-      this.#responses.set(key, inputData[key]);
+      this._responses.set(key, inputData[key]);
     }
   }
 }

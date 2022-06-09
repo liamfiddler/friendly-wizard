@@ -1,28 +1,39 @@
 import * as React from 'react';
 import useFriendlyWizard from './useFriendlyWizard';
 import steps from './steps.json';
-import YesNo from './YesNo';
 
 export const App = () => {
-  const wizard = useFriendlyWizard({ steps });
+  const { wizard, step } = useFriendlyWizard({ steps });
   let inputs = <></>;
 
-  if (wizard.activeStep.type === 'YesNo') {
-    inputs = <YesNo name={wizard.activeStep.id} />;
-  }
+  const handleSubmit = React.useCallback(
+    (e) => {
+      e.preventDefault();
+      wizard.responsesFromForm(e.target);
+      wizard.next();
+    },
+    [wizard]
+  );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    wizard.responsesFromForm(e.target);
-    wizard.next();
-  };
+  if (step?.type === 'YesNo') {
+    inputs = (
+      <div>
+        <label>
+          <input type="radio" name={step.id} value="Yes" /> Yes
+        </label>
+        <label>
+          <input type="radio" name={step.id} value="No" /> No
+        </label>
+      </div>
+    );
+  }
 
   return (
     <>
       <progress value={wizard.progressPercent} max="100" />
-      <form key={wizard.activeStep.id} onSubmit={handleSubmit}>
-        <h1>{wizard.activeStep.data.title}</h1>
-        <p>{wizard.activeStep.data.body}</p>
+      <form key={step.id} onSubmit={handleSubmit}>
+        <h1>{step.data.title}</h1>
+        <p>{step.data.body}</p>
         {inputs}
         <button
           type="button"

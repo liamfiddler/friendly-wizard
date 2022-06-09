@@ -1,5 +1,5 @@
 import test from 'ava';
-import { Wizard } from './index.js';
+import Wizard from './Wizard.js';
 
 test('Can construct a wizard', (t) => {
   new Wizard({ steps: [] });

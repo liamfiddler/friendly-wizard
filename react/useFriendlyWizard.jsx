@@ -1,31 +1,24 @@
-import { useReducer } from 'react';
-import { Wizard } from '../index';
-
-// Using the Module Pattern to ensure only one wizard class is instantiated
-let wizard;
+import { useEffect, useState, useRef } from 'react';
+import Wizard from '../WizardStorage';
 
 const useFriendlyWizard = (wizardOptions) => {
-  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+  const wizard = useRef(new Wizard(wizardOptions));
+  const [step, setStep] = useState(wizard.current.activeStep);
 
-  if (!wizard && !!wizardOptions) {
-    // React doesn't know when the wizard's internal values change, so
-    // we have to force a rerender whenever it changes to a different step
-    class ReactWizard extends Wizard {
-      next() {
-        super.next();
-        forceUpdate();
-      }
+  useEffect(() => {
+    const eventName = 'step:change';
+    const onStepChange = () => setStep(wizard.current.activeStep);
+    wizard.current.addEventListener(eventName, onStepChange);
 
-      previous() {
-        super.previous();
-        forceUpdate();
-      }
-    }
+    return () => {
+      wizard.current.removeEventListener(eventName, onStepChange);
+    };
+  }, []);
 
-    wizard = new ReactWizard(wizardOptions);
-  }
-
-  return wizard;
+  return {
+    wizard: wizard.current,
+    step,
+  };
 };
 
 export default useFriendlyWizard;
