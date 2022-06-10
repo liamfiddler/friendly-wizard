@@ -7,13 +7,13 @@ A class for managing steps in a wizard, and their responses.
 Install this package:
 
 ```sh
-npm install FutureFriendlyTeam/friendly-wizard
+npm install --save FutureFriendlyTeam/friendly-wizard
 ```
 
 Then import the Wizard class and start using it:
 
 ```js
-import Wizard from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
+import Wizard from 'friendly-wizard/Wizard.js';
 
 const wizard = new Wizard({
     steps: [
@@ -67,8 +67,8 @@ A version of the Wizard class that is extended to automatically read/write the r
 To use it import from the `WizardStorage.js` file instead of `Wizard.js`:
 
 ```diff
-- import Wizard from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
-+ import Wizard from 'FutureFriendlyTeam/friendly-wizard/WizardStorage.js';
+- import Wizard from 'friendly-wizard/Wizard.js';
++ import Wizard from 'friendly-wizard/WizardStorage.js';
 ```
 
 Additionally, two new options will be available when instantiating the class:
