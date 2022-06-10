@@ -46,6 +46,90 @@ wizard.next();
 console.log(wizard.activeStep.data.title);
 ```
 
+## Configuration
+
+The Wizard class constructor takes an object for configuration:
+
+| Param | Type | Description |
+| --- | --- | --- |
+| steps | `Step[]` | An array of [_Step objects_](#step-objects), representing the screens in the wizard flow |
+| startAtId | `string` | The ID of the step which should initially be active (defaults to the first step if not supplied) |
+| responses | `Map.&lt;string, any&gt;` \| `Record.&lt;string, any&gt;` | The initial set of answers/responses to the wizard (defaults to an empty object if not supplied) |
+
+<a name="step-objects"></a>
+## Defining steps
+
+The `steps` value passed the Wizard class constructor is an array of _Step objects_.
+
+_Step objects_ are a generic javascript object with whatever keys you like, however the following keys have special functionality attached to them:
+
+### id
+
+A unique identifier for the step. If it is not supplied a random string will be generated as the ID (note: this is randomly generated every time a new Wizard is created, it will be different every time and does not persist across multiple instantiations).
+
+### skip
+
+*skip* contains the logic for skipping the step. This could be a boolean, a function that returns a boolean, or a mongo-style object that compares against the wizard responses.
+
+If you pass an object as the value for *skip* you can use mongo-style syntax to compare responses and response values. Under the hood it uses [sift.js](https://github.com/crcn/sift.js) and supports a variety of operators. Refer to the list of [supported operators in the sift.js documentation](https://github.com/crcn/sift.js#supported-operators).
+
+```js
+const wizard = new Wizard({
+  steps: [
+    {
+      id: 'step1',
+    },
+    {
+      id: 'step2',
+      // skip the step if 'something' === 'test'
+      skip: {
+        something: {
+          $eq: 'test',
+        },
+      },
+    },
+    {
+      id: 'step3',
+    },
+  ],
+});
+
+// outputs 'step2', because the second step is not skipped
+console.log(wizard.nextStep.id);
+
+// set the response for 'something' to 'test'
+wizard.responses.set('something', 'test');
+
+// outputs 'step3' because the second step is now skipped
+console.log(wizard.nextStep.id);
+```
+
+## Events
+
+The Wizard class is an [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget). Event listeners can be added to the class, and will trigger functionality when certain circumstances occur in usage.
+
+| Event | Description |
+| --- | --- |
+| *step:change* | Triggered when the wizard moves to a different step |
+| *step:next* | Triggered when the wizard moves forward a step |
+| *step:previous* | Triggered when the wizard moves back a step |
+| *responses:change* | Triggered when a response value is created, updated, or deleted |
+
+The event listeners are particularly useful in Single Page Apps, they allow libraries and frameworks to listen for changes and render updates as they occur.
+
+```js
+const wizard = new Wizard({
+  steps: [{}, {}, {}, {}],
+});
+
+wizard.addEventListener('step:change', () => {
+  console.log('hello world');
+});
+
+// Change to the next step, triggering the event listener and outputting 'hello world'
+wizard.next();
+```
+
 ## Usage in React
 
 Example usage is demonstrated in the [React example project](./react) in this repo.
