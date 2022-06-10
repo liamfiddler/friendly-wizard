@@ -34,10 +34,10 @@ export default class Wizard extends EventTarget {
 
   /**
    * The responses to the wizard
-   * @type Map<string, any>
+   * @type MapWithChangeCallback<string, any>
    * @private
    */
-  _responses = new Map();
+  _responses;
 
   /**
    * Construct a new Wizard
@@ -84,14 +84,20 @@ export default class Wizard extends EventTarget {
       this.#stepIndex = stepIndex;
     }
 
+    let initialResponses = null;
+
     if (options?.responses) {
       if (options.responses instanceof Map) {
-        this._responses = options.responses;
+        initialResponses = options.responses;
       } else {
-        const responses = Object.entries(options.responses);
-        this._responses = new Map(responses);
+        initialResponses = Object.entries(options.responses);
       }
     }
+
+    // Trigger an event when the responses are changed
+    this._responses = new MapWithChangeCallback(initialResponses, () => {
+      this.dispatchEvent(new Event('responses:change'));
+    });
   }
 
   /**
@@ -285,6 +291,37 @@ export default class Wizard extends EventTarget {
 
     for (const key in inputData) {
       this._responses.set(key, inputData[key]);
+    }
+  }
+}
+
+// An extended Map class that runs a callback on changes
+class MapWithChangeCallback extends Map {
+  callback;
+
+  constructor(value, callback) {
+    super(value);
+    this.callback = callback;
+  }
+
+  set(key, value) {
+    if (!super.has(key) || super.get(key) !== value) {
+      super.set(key, value);
+      this?.callback?.();
+    }
+  }
+
+  delete(key) {
+    if (super.has(key)) {
+      super.delete(key);
+      this?.callback?.();
+    }
+  }
+
+  clear() {
+    if (super.size > 0) {
+      super.clear();
+      this?.callback?.();
     }
   }
 }
