@@ -46,6 +46,90 @@ wizard.next();
 console.log(wizard.activeStep.data.title);
 ```
 
+## Configuration
+
+The Wizard class constructor takes an object for configuration:
+
+| Param | Type | Description |
+| --- | --- | --- |
+| steps | `Step[]` | An array of [_Step objects_](#step-objects), representing the screens in the wizard flow |
+| startAtId | `string` | The ID of the step which should initially be active (defaults to the first step if not supplied) |
+| responses | `Map.&lt;string, any&gt;` \| `Record.&lt;string, any&gt;` | The initial set of answers/responses to the wizard (defaults to an empty object if not supplied) |
+
+<a name="step-objects"></a>
+## Defining steps
+
+The `steps` value passed the Wizard class constructor is an array of _Step objects_.
+
+_Step objects_ are a generic javascript object with whatever keys you like, however the following keys have special functionality attached to them:
+
+### id
+
+A unique identifier for the step. If it is not supplied a random string will be generated as the ID (note: this is randomly generated every time a new Wizard is created, it will be different every time and does not persist across multiple instantiations).
+
+### skip
+
+*skip* contains the logic for skipping the step. This could be a boolean, a function that returns a boolean, or a mongo-style object that compares against the wizard responses.
+
+If you pass an object as the value for *skip* you can use mongo-style syntax to compare responses and response values. Under the hood it uses [sift.js](https://github.com/crcn/sift.js) and supports a variety of operators. Refer to the list of [supported operators in the sift.js documentation](https://github.com/crcn/sift.js#supported-operators).
+
+```js
+const wizard = new Wizard({
+  steps: [
+    {
+      id: 'step1',
+    },
+    {
+      id: 'step2',
+      // skip the step if 'something' === 'test'
+      skip: {
+        something: {
+          $eq: 'test',
+        },
+      },
+    },
+    {
+      id: 'step3',
+    },
+  ],
+});
+
+// outputs 'step2', because the second step is not skipped
+console.log(wizard.nextStep.id);
+
+// set the response for 'something' to 'test'
+wizard.responses.set('something', 'test');
+
+// outputs 'step3' because the second step is now skipped
+console.log(wizard.nextStep.id);
+```
+
+## Events
+
+The Wizard class is an [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget). Event listeners can be added to the class, and will trigger functionality when certain circumstances occur in usage.
+
+| Event | Description |
+| --- | --- |
+| *step:change* | Triggered when the wizard moves to a different step |
+| *step:next* | Triggered when the wizard moves forward a step |
+| *step:previous* | Triggered when the wizard moves back a step |
+| *responses:change* | Triggered when a response value is created, updated, or deleted |
+
+The event listeners are particularly useful in Single Page Apps, they allow libraries and frameworks to listen for changes and render updates as they occur.
+
+```js
+const wizard = new Wizard({
+  steps: [{}, {}, {}, {}],
+});
+
+wizard.addEventListener('step:change', () => {
+  console.log('hello world');
+});
+
+// Change to the next step, triggering the event listener and outputting 'hello world'
+wizard.next();
+```
+
 ## Usage in React
 
 Example usage is demonstrated in the [React example project](./react) in this repo.
@@ -104,12 +188,12 @@ A module for handling wizard data
             * [.steps()](#module_friendly-wizard--module.exports+steps) ⇒ <code>Iterable.&lt;Step&gt;</code>
             * [.responsesFromForm(form)](#module_friendly-wizard--module.exports+responsesFromForm)
         * _inner_
-            * [~Step](#module_friendly-wizard--module.exports..Step) : <code>Object</code>
+            * [~Step](#module_friendly-wizard--module.exports..Step) : <code>Object.&lt;string, any&gt;</code>
 
 <a name="exp_module_friendly-wizard--module.exports"></a>
 
 ### module.exports ⏏
-A Wizard data class
+A class for handling the steps in a wizard-like flow, as well as the responses to questions in the flow
 
 **Kind**: Exported class  
 <a name="new_module_friendly-wizard--module.exports_new"></a>
@@ -118,12 +202,12 @@ A Wizard data class
 Construct a new Wizard
 
 
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-| options.steps | <code>Array.&lt;Step&gt;</code> | 
-| [options.startAtId] | <code>number</code> \| <code>string</code> | 
-| [options.responses] | <code>Map.&lt;string, any&gt;</code> \| <code>Record.&lt;string, any&gt;</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing configuration for the wizard |
+| options.steps | <code>Array.&lt;Step&gt;</code> | An array of Step objects, representing the screens in the wizard flow |
+| [options.startAtId] | <code>string</code> | The ID of the step which should initially be active (defaults to the first step if not supplied) |
+| [options.responses] | <code>Map.&lt;string, any&gt;</code> \| <code>Record.&lt;string, any&gt;</code> | An object containing the initial set of answers/responses to the wizard |
 
 <a name="module_friendly-wizard--module.exports+isLastStep"></a>
 
@@ -210,14 +294,14 @@ Add the values from a HTML form element to the responses
 
 <a name="module_friendly-wizard--module.exports..Step"></a>
 
-#### module.exports~Step : <code>Object</code>
+#### module.exports~Step : <code>Object.&lt;string, any&gt;</code>
+An object representing a step in the wizard flow
+
 **Kind**: inner typedef of [<code>module.exports</code>](#exp_module_friendly-wizard--module.exports)  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| [id] | <code>string</code> \| <code>number</code> | Defaults to the array index if not specified |
-| [type] | <code>string</code> | The type of step |
-| [skip] | <code>boolean</code> \| <code>function</code> | The logic for skipping a step (a boolean, a function that returns a boolean, or a mongo-style object) |
-| [data] | <code>any</code> | Any other data you may want to attach to the step |
+| [id] | <code>string</code> | A unique identifier for the step (a random string will be generated as the ID if not specified) |
+| [skip] | <code>Object</code> \| <code>boolean</code> \| <code>function</code> | The logic for skipping a step (a boolean, a function that returns a boolean, or a mongo-style object) |
 

@@ -6,15 +6,14 @@
 import sift from 'sift';
 
 /**
- * @typedef {Object} Step
- * @property {string|number} [id] Defaults to the array index if not specified
- * @property {string} [type] The type of step
- * @property {boolean|function(Wizard): boolean|Object} [skip] The logic for skipping a step (a boolean, a function that returns a boolean, or a mongo-style object)
- * @property {any} [data] Any other data you may want to attach to the step
+ * An object representing a step in the wizard flow
+ * @typedef {Object.<string, any>} Step
+ * @property {string} [id] A unique identifier for the step (a random string will be generated as the ID if not specified)
+ * @property {Object|boolean|function(Wizard): boolean} [skip] The logic for skipping a step (a boolean, a function that returns a boolean, or a mongo-style object)
  */
 
 /**
- * A Wizard data class
+ * A class for handling the steps in a wizard-like flow, as well as the responses to questions in the flow
  * @alias module:friendly-wizard
  */
 export default class Wizard extends EventTarget {
@@ -41,10 +40,10 @@ export default class Wizard extends EventTarget {
 
   /**
    * Construct a new Wizard
-   * @param {Object} options
-   * @param {Step[]} options.steps
-   * @param {number|string} [options.startAtId]
-   * @param {Map<string, any>|Record<string, any>} [options.responses]
+   * @param {Object} options An object containing configuration for the wizard
+   * @param {Step[]} options.steps An array of Step objects, representing the screens in the wizard flow
+   * @param {string} [options.startAtId] The ID of the step which should initially be active (defaults to the first step if not supplied)
+   * @param {Map<string, any>|Record<string, any>} [options.responses] An object containing the initial set of answers/responses to the wizard
    */
   constructor(options) {
     super();
