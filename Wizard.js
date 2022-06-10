@@ -34,7 +34,7 @@ export default class Wizard extends EventTarget {
 
   /**
    * The responses to the wizard
-   * @type WizardResponses<string, any>
+   * @type MapWithChangeCallback<string, any>
    * @private
    */
   _responses;
@@ -84,16 +84,20 @@ export default class Wizard extends EventTarget {
       this.#stepIndex = stepIndex;
     }
 
+    let initialResponses = null;
+
     if (options?.responses) {
       if (options.responses instanceof Map) {
-        this._responses = new WizardResponses(this, options.responses);
+        initialResponses = options.responses;
       } else {
-        const responses = Object.entries(options.responses);
-        this._responses = new WizardResponses(this, responses);
+        initialResponses = Object.entries(options.responses);
       }
-    } else {
-      this._responses = new WizardResponses(this);
     }
+
+    // Trigger an event when the responses are changed
+    this._responses = new MapWithChangeCallback(initialResponses, () => {
+      this.dispatchEvent(new Event('responses:change'));
+    });
   }
 
   /**
@@ -291,37 +295,33 @@ export default class Wizard extends EventTarget {
   }
 }
 
-// An extended Map class that emits events on changes
-class WizardResponses extends Map {
-  #wizard;
+// An extended Map class that runs a callback on changes
+class MapWithChangeCallback extends Map {
+  callback;
 
-  constructor(wizard, ...args) {
-    super(...args);
-    this.#wizard = wizard;
-  }
-
-  dispatchChangeEvent() {
-    this.#wizard.dispatchEvent(new Event('responses:change'));
+  constructor(value, callback) {
+    super(value);
+    this.callback = callback;
   }
 
   set(key, value) {
     if (!super.has(key) || super.get(key) !== value) {
       super.set(key, value);
-      this.dispatchChangeEvent();
+      this?.callback?.();
     }
   }
 
   delete(key) {
     if (super.has(key)) {
       super.delete(key);
-      this.dispatchChangeEvent();
+      this?.callback?.();
     }
   }
 
   clear() {
     if (super.size > 0) {
       super.clear();
-      this.dispatchChangeEvent();
+      this?.callback?.();
     }
   }
 }
