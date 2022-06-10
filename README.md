@@ -66,7 +66,7 @@ A version of the Wizard class that is extended to automatically read/write the r
 
 To use it import from the `WizardStorage.js` file instead of `Wizard.js`:
 
-```js
+```diff
 - import Wizard from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
 + import Wizard from 'FutureFriendlyTeam/friendly-wizard/WizardStorage.js';
 ```
