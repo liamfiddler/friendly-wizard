@@ -2,7 +2,7 @@
 
 A class for managing steps in a wizard, and their responses.
 
-## Usage
+## Quick start
 
 Install this package:
 
@@ -13,7 +13,7 @@ npm install FutureFriendlyTeam/friendly-wizard
 Then import the Wizard class and start using it:
 
 ```js
-import { Wizard } from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
+import Wizard from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
 
 const wizard = new Wizard({
     steps: [
@@ -22,12 +22,61 @@ const wizard = new Wizard({
             type: 'text',
             data: {
                 title: 'Step 1',
-                body: 'Lorem ipsum dolor sit amet',
+                body: 'Welcome to the first step',
+            },
+        },
+        {
+            id: 'step-2',
+            type: 'text',
+            data: {
+                title: 'Step 2',
+                body: 'This is the second step',
             },
         },
     ],
 });
+
+// output the first step title
+console.log(wizard.activeStep.data.title);
+
+// navigate to the next step
+wizard.next();
+
+// output the second step title
+console.log(wizard.activeStep.data.title);
 ```
+
+## Usage in React
+
+Example usage is demonstrated in the [React example project](./react) in this repo.
+
+A custom hook called [useFriendlyWizard](./react/useFriendlyWizard.jsx) wraps the Wizard class for usage in React. It manages event listeners and updates the wizard step to component state when the step changes.
+
+## Usage in Vue
+
+Example usage is demonstrated in the [Vue example project](./vue) in this repo.
+
+The Wizard class is instantiated as a [global property](https://vuejs.org/api/application.html#app-config-globalproperties) making it available inside any component template in the application, and also on `this` of any component instance.
+
+Components accessing it can implement event listeners to render when the step changes. See [App.vue](./vue/App.vue) for an example.
+
+## Reading/writing responses to localStorage or sessionStorage
+
+A version of the Wizard class that is extended to automatically read/write the responses to/from browser storage is included in this repo.
+
+To use it import from the `WizardStorage.js` file instead of `Wizard.js`:
+
+```js
+- import Wizard from 'FutureFriendlyTeam/friendly-wizard/Wizard.js';
++ import Wizard from 'FutureFriendlyTeam/friendly-wizard/WizardStorage.js';
+```
+
+Additionally, two new options will be available when instantiating the class:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [persist] | `boolean` | Whether the responses should persist when the window/tab is closed (`localStorage`), or not (`sessionStorage`). Defaults to `true` |
+| [storageKey] | `string` | The key under which the responses should be stored. Defaults to `"wizard"` |
 
 # API Documentation
 
@@ -74,7 +123,7 @@ Construct a new Wizard
 | options | <code>Object</code> | 
 | options.steps | <code>Array.&lt;Step&gt;</code> | 
 | [options.startAtId] | <code>number</code> \| <code>string</code> | 
-| [options.responses] | <code>Map</code> \| <code>Record.&lt;string, any&gt;</code> | 
+| [options.responses] | <code>Map.&lt;string, any&gt;</code> \| <code>Record.&lt;string, any&gt;</code> | 
 
 <a name="module_friendly-wizard--module.exports+isLastStep"></a>
 
