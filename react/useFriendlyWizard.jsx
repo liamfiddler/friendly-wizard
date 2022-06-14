@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import Wizard from '../WizardStorage';
+import Wizard from '../Wizard';
 
 const useFriendlyWizard = (wizardOptions) => {
   const wizard = useRef(new Wizard(wizardOptions));
