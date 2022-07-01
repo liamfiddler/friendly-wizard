@@ -44,22 +44,30 @@ export default class WizardStorage extends Wizard {
       this.#storageKey = options.storageKey;
     }
 
-    const storedJson = localStorage.getItem(this.#storageKey);
+    // Bail out if we're running on the server
+    if (!window || !window?.[this.#storageType]) {
+      return;
+    }
+
+    const storedJson = window[this.#storageType].getItem(this.#storageKey);
     this._responses = new Map(JSON.parse(storedJson));
     this.dispatchEvent(new Event('responses:load'));
   }
 
   storeResponses() {
-    if (window && this.#storageType) {
-      const responses = [...this._responses];
-
-      window[this.#storageType].setItem(
-        this.#storageKey,
-        JSON.stringify(responses)
-      );
-
-      this.dispatchEvent(new Event('responses:store'));
+    // Bail out if we're running on the server
+    if (!window || !window?.[this.#storageType]) {
+      return;
     }
+
+    const responses = [...this._responses];
+
+    window[this.#storageType].setItem(
+      this.#storageKey,
+      JSON.stringify(responses)
+    );
+
+    this.dispatchEvent(new Event('responses:store'));
   }
 
   /**
