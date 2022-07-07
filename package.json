@@ -1,6 +1,6 @@
 {
   "name": "friendly-wizard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "Wizard.js",
   "repository": {
@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "ava": "^4.2.0",
-    "jsdoc-to-markdown": "^7.1.1"
+    "jsdoc-to-markdown": "^7.1.1",
+    "sinon": "^14.0.0"
   },
   "dependencies": {
     "sift": "^16.0.0"

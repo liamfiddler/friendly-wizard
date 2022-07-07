@@ -1,4 +1,5 @@
 import test from 'ava';
+import sinon from 'sinon';
 import Wizard from './Wizard.js';
 
 test('Can construct a wizard', (t) => {
@@ -315,4 +316,44 @@ test('Percentage progress is 100% if all subsequent steps are skipped', (t) => {
   });
 
   t.is(wizard.progressPercent, 100);
+});
+
+test('Can fill responses from FormData (unique keys)', (t) => {
+  const wizard = new Wizard({ steps: [{}] });
+  const stub = sinon.stub(FormData.prototype, 'entries');
+
+  stub.returns({
+    *[Symbol.iterator]() {
+      yield ['key1', 'value1'];
+      yield ['key2', 'value2'];
+      yield ['key3', 'value3'];
+    }
+  });
+
+  class HTMLFormElement {};
+  wizard.responsesFromForm(new HTMLFormElement());
+  stub.restore();
+
+  t.is(wizard.responses.size, 3);
+});
+
+test('Can fill responses from FormData (multiple with same key)', (t) => {
+  const wizard = new Wizard({ steps: [{}] });
+  const stub = sinon.stub(FormData.prototype, 'entries');
+
+  stub.returns({
+    *[Symbol.iterator]() {
+      yield ['key', 'value1'];
+      yield ['key', 'value2'];
+      yield ['key', 'value3'];
+    }
+  });
+
+  class HTMLFormElement {};
+  wizard.responsesFromForm(new HTMLFormElement());
+  stub.restore();
+
+  t.is(wizard.responses.size, 1);
+  t.true(Array.isArray(wizard.responses.get('key')));
+  t.is(wizard.responses.get('key').length, 3);
 });
