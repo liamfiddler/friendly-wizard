@@ -357,3 +357,15 @@ test('Can fill responses from FormData (multiple with same key)', (t) => {
   t.true(Array.isArray(wizard.responses.get('key')));
   t.is(wizard.responses.get('key').length, 3);
 });
+
+test('Can activate a step by its ID', (t) => {
+  const wizard = new Wizard({
+    steps: [...Array(4).keys()].map((x) => ({
+      id: `step-${x + 1}`,
+      skip: true, // can activate a step even if it should be skipped
+    })),
+  });
+
+  wizard.goToStepId('step-3');
+  t.is(wizard.activeStep.id, 'step-3');
+});
