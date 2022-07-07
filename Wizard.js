@@ -304,6 +304,22 @@ export default class Wizard extends EventTarget {
       this._responses.set(key, inputData[key]);
     }
   }
+
+  /**
+   * Makes the specified step ID active
+   * @param {string} stepId
+  */
+  goToStepId(stepId) {
+    const stepIndex = this.#steps.findIndex(
+      ({ id }) => id === stepId
+    );
+
+    if (stepIndex < 0) {
+      throw new Error('Cannot find step matching the "stepId" value');
+    }
+
+    this.#setStepIndex(stepIndex);
+  }
 }
 
 // An extended Map class that runs a callback on changes
