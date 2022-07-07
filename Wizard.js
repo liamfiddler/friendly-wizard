@@ -286,7 +286,19 @@ export default class Wizard extends EventTarget {
    */
   responsesFromForm(form) {
     const formData = new FormData(form);
-    const inputData = Object.fromEntries(formData.entries());
+    const inputData = {};
+
+    for (const [key, value] of formData.entries()) {
+      if (!Reflect.has(inputData, key)) {
+        inputData[key] = value;
+      } else {
+        if (!Array.isArray(inputData[key])) {
+          inputData[key] = [inputData[key]];
+        }
+
+        inputData[key].push(value);
+      }
+    }
 
     for (const key in inputData) {
       this._responses.set(key, inputData[key]);
