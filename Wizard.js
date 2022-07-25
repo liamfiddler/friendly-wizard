@@ -156,7 +156,7 @@ export default class Wizard extends EventTarget {
       return undefined;
     }
 
-    for (let index = start; index < this.#steps.length; index--) {
+    for (let index = start; index < this.#steps.length && index >= 0; index--) {
       if (!this.#skipStep(index)) {
         return index;
       }
@@ -308,7 +308,7 @@ export default class Wizard extends EventTarget {
   /**
    * Makes the specified step ID active
    * @param {string} stepId
-  */
+   */
   goToStepId(stepId) {
     const stepIndex = this.#steps.findIndex(
       ({ id }) => id === stepId
