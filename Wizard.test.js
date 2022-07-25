@@ -325,7 +325,7 @@ test('Can fill responses from FormData (unique keys)', (t) => {
     }
   });
 
-  class HTMLFormElement {};
+  class HTMLFormElement {}
   wizard.responsesFromForm(new HTMLFormElement());
   stub.restore();
 
@@ -344,7 +344,7 @@ test('Can fill responses from FormData (multiple with same key)', (t) => {
     }
   });
 
-  class HTMLFormElement {};
+  class HTMLFormElement {}
   wizard.responsesFromForm(new HTMLFormElement());
   stub.restore();
 
