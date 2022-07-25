@@ -2,11 +2,6 @@ import test from 'ava';
 import sinon from 'sinon';
 import Wizard from './Wizard.js';
 
-test('Can construct a wizard', (t) => {
-  new Wizard({ steps: [] });
-  t.pass();
-});
-
 test('Can generate IDs if none are provided', (t) => {
   const wizard = new Wizard({
     steps: [{}, {}, {}],
