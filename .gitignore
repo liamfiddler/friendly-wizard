@@ -105,3 +105,6 @@ dist
 
 # Parcel directory
 .parcel-cache
+
+# Sonarqube
+.scannerwork
