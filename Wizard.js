@@ -156,7 +156,7 @@ export default class Wizard extends EventTarget {
       return undefined;
     }
 
-    for (let index = start; index < this.#steps.length; index--) {
+    for (let index = start; index < this.#steps.length && index >= 0; index--) {
       if (!this.#skipStep(index)) {
         return index;
       }
@@ -238,7 +238,6 @@ export default class Wizard extends EventTarget {
    */
   *steps() {
     for (const step of this.#steps) {
-      // this.#nextStepIndex(); // FIXME: Handle skipped steps
       yield step;
     }
   }
@@ -248,7 +247,6 @@ export default class Wizard extends EventTarget {
    * @returns {number}
    */
   get stepNum() {
-    // FIXME: this should be based on the step number, not the stepIndex
     return this.#stepIndex + 1;
   }
 
@@ -308,7 +306,7 @@ export default class Wizard extends EventTarget {
   /**
    * Makes the specified step ID active
    * @param {string} stepId
-  */
+   */
   goToStepId(stepId) {
     const stepIndex = this.#steps.findIndex(
       ({ id }) => id === stepId

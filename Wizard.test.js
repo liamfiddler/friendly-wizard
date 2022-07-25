@@ -2,11 +2,6 @@ import test from 'ava';
 import sinon from 'sinon';
 import Wizard from './Wizard.js';
 
-test('Can construct a wizard', (t) => {
-  new Wizard({ steps: [] });
-  t.pass();
-});
-
 test('Can generate IDs if none are provided', (t) => {
   const wizard = new Wizard({
     steps: [{}, {}, {}],
@@ -330,7 +325,7 @@ test('Can fill responses from FormData (unique keys)', (t) => {
     }
   });
 
-  class HTMLFormElement {};
+  class HTMLFormElement {}
   wizard.responsesFromForm(new HTMLFormElement());
   stub.restore();
 
@@ -349,7 +344,7 @@ test('Can fill responses from FormData (multiple with same key)', (t) => {
     }
   });
 
-  class HTMLFormElement {};
+  class HTMLFormElement {}
   wizard.responsesFromForm(new HTMLFormElement());
   stub.restore();
 
