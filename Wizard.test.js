@@ -2,6 +2,33 @@ import test from 'ava';
 import sinon from 'sinon';
 import Wizard from './Wizard.js';
 
+if (!FormData) {
+  global.FormData = class {
+    *entries() {}
+  };
+}
+
+test('Throws when no steps provided', (t) => {
+  t.throws(() => new Wizard());
+});
+
+test('Throws when step IDs are not unique', (t) => {
+  t.throws(() => {
+    new Wizard({
+      steps: [{ id: 'duplicate' }, { id: 'duplicate' }],
+    });
+  });
+});
+
+test('Throws when the startAtId cannot be found', (t) => {
+  t.throws(() => {
+    new Wizard({
+      steps: [{}, {}],
+      startAtId: 'missing',
+    });
+  });
+});
+
 test('Can generate IDs if none are provided', (t) => {
   const wizard = new Wizard({
     steps: [{}, {}, {}],
@@ -91,6 +118,7 @@ test('Can move to the next step(s)', (t) => {
   t.is(wizard.stepNum, 2);
   wizard.next();
   t.is(wizard.stepNum, 3);
+  t.throws(() => wizard.next());
 });
 
 test('Can move to the previous step(s)', (t) => {
@@ -106,6 +134,7 @@ test('Can move to the previous step(s)', (t) => {
   t.is(wizard.stepNum, 2);
   wizard.previous();
   t.is(wizard.stepNum, 1);
+  t.throws(() => wizard.previous());
 });
 
 test('Can store & retrieve responses', (t) => {
@@ -114,6 +143,18 @@ test('Can store & retrieve responses', (t) => {
     responses: {
       something: 'test',
     },
+  });
+
+  t.is(wizard.responses.get('something'), 'test');
+});
+
+test('Can store responses as Map', (t) => {
+  const responses = new Map();
+  responses.set('something', 'test');
+
+  const wizard = new Wizard({
+    steps: [],
+    responses,
   });
 
   t.is(wizard.responses.get('something'), 'test');
@@ -322,7 +363,7 @@ test('Can fill responses from FormData (unique keys)', (t) => {
       yield ['key1', 'value1'];
       yield ['key2', 'value2'];
       yield ['key3', 'value3'];
-    }
+    },
   });
 
   class HTMLFormElement {}
@@ -341,7 +382,7 @@ test('Can fill responses from FormData (multiple with same key)', (t) => {
       yield ['key', 'value1'];
       yield ['key', 'value2'];
       yield ['key', 'value3'];
-    }
+    },
   });
 
   class HTMLFormElement {}
@@ -363,4 +404,96 @@ test('Can activate a step by its ID', (t) => {
 
   wizard.goToStepId('step-3');
   t.is(wizard.activeStep.id, 'step-3');
+});
+
+test('Throws when trying to activate a step by a missing ID', (t) => {
+  const wizard = new Wizard({
+    steps: [{}, {}, {}],
+  });
+
+  t.throws(() => wizard.goToStepId('missing'));
+});
+
+test('Can get hydrated steps', (t) => {
+  const wizard = new Wizard({
+    steps: [
+      {
+        id: 'first',
+      },
+      {
+        id: 'skip',
+        skip: true,
+      },
+      {
+        id: 'last',
+      },
+    ],
+  });
+
+  const steps = [...wizard.steps()];
+  t.false(steps[0].isSkipped);
+  t.true(steps[1].isSkipped);
+  t.false(steps[2].isSkipped);
+});
+
+test('Triggers event when the responses are cleared', async (t) => {
+  const wizard = new Wizard({
+    steps: [{}, {}, {}],
+    responses: {
+      something: 'test',
+    },
+  });
+
+  const result = await new Promise((resolve) => {
+    wizard.addEventListener('responses:change', () => resolve(true));
+    wizard.responses.clear();
+  });
+
+  t.true(result);
+});
+
+test('Triggers event when a response is deleted', async (t) => {
+  const wizard = new Wizard({
+    steps: [{}, {}, {}],
+    responses: {
+      something: 'test',
+    },
+  });
+
+  const result = await new Promise((resolve) => {
+    wizard.addEventListener('responses:change', () => resolve(true));
+    wizard.responses.delete('something');
+  });
+
+  t.true(result);
+});
+
+test('Triggers event when a response is added', async (t) => {
+  const wizard = new Wizard({
+    steps: [{}, {}, {}],
+  });
+
+  const result = await new Promise((resolve) => {
+    wizard.addEventListener('responses:change', () => resolve(true));
+    wizard.responses.set('something', 'test');
+  });
+
+  t.true(result);
+});
+
+test('Does not trigger event when a response is set to the same value', async (t) => {
+  const wizard = new Wizard({
+    steps: [{}, {}, {}],
+    responses: {
+      something: 'test',
+    },
+  });
+
+  const result = await new Promise((resolve, reject) => {
+    wizard.addEventListener('responses:change', () => reject());
+    wizard.responses.set('something', 'test');
+    setTimeout(() => resolve(true), 10);
+  });
+
+  t.true(result);
 });

@@ -13,6 +13,12 @@ import sift from 'sift';
  */
 
 /**
+ * A hydrated object representing a step in the wizard flow
+ * @typedef {Step & Object.<'isSkipped', boolean>} HydratedStep
+ * @property {boolean} isSkipped Whether the step is skipped
+ */
+
+/**
  * A class for handling the steps in a wizard-like flow, as well as the responses to questions in the flow
  * @alias module:friendly-wizard
  */
@@ -152,10 +158,6 @@ export default class Wizard extends EventTarget {
   #previousStepIndex(startStepIndex) {
     let start = (startStepIndex ?? this.#stepIndex) - 1;
 
-    if (start < 0) {
-      return undefined;
-    }
-
     for (let index = start; index < this.#steps.length && index >= 0; index--) {
       if (!this.#skipStep(index)) {
         return index;
@@ -196,7 +198,13 @@ export default class Wizard extends EventTarget {
    * Sets the next step active
    */
   next() {
-    this.#setStepIndex(this.#nextStepIndex());
+    const index = this.#nextStepIndex();
+
+    if (index === undefined) {
+      throw new Error('No next step is available');
+    }
+
+    this.#setStepIndex(index);
     this.dispatchEvent(new Event('step:next'));
   }
 
@@ -204,7 +212,13 @@ export default class Wizard extends EventTarget {
    * Sets the previous step active
    */
   previous() {
-    this.#setStepIndex(this.#previousStepIndex());
+    const index = this.#previousStepIndex();
+
+    if (index === undefined) {
+      throw new Error('No previous step is available');
+    }
+
+    this.#setStepIndex(index);
     this.dispatchEvent(new Event('step:previous'));
   }
 
@@ -234,11 +248,14 @@ export default class Wizard extends EventTarget {
 
   /**
    * Iterable steps
-   * @returns {Iterable<Step>}
+   * @returns {Iterable<HydratedStep>}
    */
   *steps() {
-    for (const step of this.#steps) {
-      yield step;
+    for (let index = 0; index < this.#steps.length; index++) {
+      yield {
+        ...this.#steps[index],
+        isSkipped: this.#skipStep(index),
+      };
     }
   }
 
@@ -255,7 +272,7 @@ export default class Wizard extends EventTarget {
    * @returns {number}
    */
   get stepTotal() {
-    return [...this.steps()].length;
+    return this.#steps.length;
   }
 
   /**
