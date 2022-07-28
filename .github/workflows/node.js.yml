@@ -17,3 +17,6 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
+    - uses: kitabisa/sonarqube-action@v1.2.0
+      with:
+        login: ${{ secrets.SONARQUBE_TOKEN }}
