@@ -3,7 +3,7 @@
  * @module friendly-wizard-storage
  */
 
-import Wizard from './Wizard';
+import Wizard from './Wizard.js';
 
 /**
  * A Wizard data class
