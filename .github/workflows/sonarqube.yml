@@ -18,3 +18,4 @@ jobs:
     - uses: kitabisa/sonarqube-action@v1.2.0
       with:
         login: ${{ secrets.SONARQUBE_TOKEN }}
+        host: https://sonarqube.futurefriendly.team
