@@ -2,7 +2,7 @@ import test from 'ava';
 import sinon from 'sinon';
 import Wizard from './Wizard.js';
 
-if (!FormData) {
+if (!global?.FormData) {
   global.FormData = class {
     *entries() {}
   };
