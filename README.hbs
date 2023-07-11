@@ -7,7 +7,7 @@ A class for managing steps in a wizard, and their responses.
 Install this package:
 
 ```sh
-npm install --save FutureFriendlyTeam/friendly-wizard
+npm install --save liamfiddler/friendly-wizard
 ```
 
 Then import the Wizard class and start using it:
